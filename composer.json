@@ -1,0 +1,13 @@
+{
+    "name": "knox/pesapal",
+    "description": "A laravel package that integrates into the pesapal api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Timothy Radier",
+            "email": "timothyradier@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
