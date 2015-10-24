@@ -1,4 +1,4 @@
-# Pesapal
+# Pesapal Laravel 5 API
 Laravel 5 Package for the Pesapal API
 
-Making Final Changes Check Back Soon
+Documentation coming up soon
