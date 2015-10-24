@@ -22,7 +22,7 @@ class Pesapal
             'amount' => '',
             'description' => '',
             'type' => 'MERCHANT',
-            'reference' => 'PESAPAL'. $this -> random_string(),
+            'reference' => $this -> random_reference(),
             'first_name' => '',
             'last_name' => '',
             'email' => '',
@@ -30,7 +30,7 @@ class Pesapal
             'phonenumber' => '',
             'live' => true,
             'callback_route' => '',
-            'success_route' => ''
+            'success_controller_method' => '',
         );
 
 
@@ -43,6 +43,8 @@ class Pesapal
         $params = array_merge($defaults, $params);
 
         Session::put('pesapal_callback_route', $params['callback_route']);
+
+        Session::put('pesapal_success_controller_method', $params['success_controller_method']);
 
         Session::put('pesapal_is_live', $params['live']);
 
@@ -96,10 +98,6 @@ class Pesapal
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        //$consumer_key = env('PESAPAL_CONSUMER_KEY');
-
-        //$consumer_secret = env('PESAPAL_CONSUMER_SECRET');
-
         $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
 
         if($pesapalNotification=="CHANGE" && $pesapalTrackingId!='')
@@ -141,7 +139,12 @@ class Pesapal
            curl_close ($ch);
            
            //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
-           PesapalController::paymentSuccess($pesapal_transaction_tracking_id,$pesapal_merchant_reference);
+           $separator = explode('@', Session::get('pesapal_success_controller_method'));
+           $controller = $separator[0];
+           $method = $separator[1];
+           $class = '\App\Http\Controllers\\'.$separator[0];
+           $payment = new $class();
+           $payment -> $method();
 
            if($status != "PENDING")
            {
@@ -155,9 +158,11 @@ class Pesapal
 
     }
 
-    public function random_string()
+
+
+    public function random_reference()
     {
-        $length = 8;
+        $length = 15;
 
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -169,7 +174,7 @@ class Pesapal
             $str .= $keyspace[random_int(0, $max)];
         }
 
-        return $str;
+        return 'PESAPAL'. $str;
     }
 
 }
