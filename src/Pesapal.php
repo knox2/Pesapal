@@ -3,8 +3,8 @@
 namespace Knox\Pesapal;
 
 include 'OAuth.php';
-use Illuminate\Support\Facades\Input as Input;
-use App\Http\Controllers\Controller\PesapalController;
+
+use Session;
 
 class Pesapal
 {
@@ -15,7 +15,6 @@ class Pesapal
      */
 
     private $callback_route = '';
-    private $is_live = true;
 
     public function makePayment($params)
     {
@@ -27,31 +26,40 @@ class Pesapal
             'first_name' => '',
             'last_name' => '',
             'email' => '',
+            'currency' => 'KES',
             'phonenumber' => '',
             'live' => true,
-            'callback_route' => ''
+            'callback_route' => '',
+            'success_route' => ''
         );
+
+
+        if(!array_key_exists('currency',$params)){
+            if(config('pesapal.currency') != null){
+              $params['currency'] = config('pesapal.currency');
+            }
+        }
 
         $params = array_merge($defaults, $params);
 
-        //dd($params);
+        Session::put('pesapal_callback_route', $params['callback_route']);
 
-        $this -> callback_route = $params['callback_route'];
+        Session::put('pesapal_is_live', $params['live']);
 
-        $this -> is_live = $params['live'];
-
+        unset($params['callback_route']);
+ 
         $token  = NULL;
 
-        $consumer_key = env('PESAPAL_CONSUMER_KEY');
+        $consumer_key = config('pesapal.consumer_key');
 
-        $consumer_secret = env('PESAPAL_CONSUMER_SECRET');
+        $consumer_secret = config('pesapal.consumer_secret');
 
         $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
         
-        $iframelink = $this -> is_live ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
+        $iframelink = $params['live'] ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
 
-        $callback_url = public_path() . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
-        
+        $callback_url = url() . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
+       
         $post_xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                         <PesapalDirectOrderInfo 
                             xmlns:xsi=\"http://www.w3.org/2001/XMLSchemainstance\" 
@@ -62,14 +70,12 @@ class Pesapal
                             Reference=\"".$params['reference']."\" 
                             FirstName=\"".$params['first_name']."\" 
                             LastName=\"".$params['last_name']."\" 
+                            Currency=\"".$params['currency']."\" 
                             Email=\"".$params['email']."\" 
                             PhoneNumber=\"".$params['phonenumber']."\" 
                             xmlns=\"http://www.pesapal.com\" />";
         
         $post_xml = htmlentities($post_xml);
-
-        //dd($consumer_key);
-
 
         $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
 
@@ -84,19 +90,17 @@ class Pesapal
         echo '<iframe src="'.$iframe_src.'" width="100%" height="720px" scrolling="auto" frameBorder="0"> <p>Unable to load the payment page</p> </iframe>';
     }
 
-    function redirectToCallback($merchant_reference,$tracking_id){
-
-        Redirect::route($this -> callback_route)->with(['merchant_reference' => $merchant_reference , 'tracking_id' => $tracking_id]);
-
-    }
-
     function redirectToIPN($pesapalNotification,$pesapal_merchant_reference,$pesapalTrackingId){
 
         $consumer_key = config('pesapal.consumer_key');
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        $statusrequestAPI = $this -> is_live ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
+        //$consumer_key = env('PESAPAL_CONSUMER_KEY');
+
+        //$consumer_secret = env('PESAPAL_CONSUMER_SECRET');
+
+        $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
 
         if($pesapalNotification=="CHANGE" && $pesapalTrackingId!='')
         {
@@ -136,7 +140,7 @@ class Pesapal
 
            curl_close ($ch);
            
-        //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
+           //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
            PesapalController::paymentSuccess($pesapal_transaction_tracking_id,$pesapal_merchant_reference);
 
            if($status != "PENDING")

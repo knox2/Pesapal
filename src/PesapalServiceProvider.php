@@ -13,7 +13,9 @@ class PesapalServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Publish config
+        $configPath = __DIR__ . '/config/pesapal.php';
+        $this->publishes([$configPath => config_path('pesapal.php')], 'config');
     }
 
     /**
@@ -25,5 +27,9 @@ class PesapalServiceProvider extends ServiceProvider
     {
         include __DIR__.'/routes.php';
         $this->app->make('Knox\Pesapal\PesapalAPIController');
+        $this->app->bind('pesapal', function()
+        {
+            return new \Knox\Pesapal\Pesapal;
+        });
     }
 }

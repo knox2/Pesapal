@@ -2,25 +2,28 @@
 
 namespace Knox\Pesapal;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
+use Illuminate\Support\Facades\Input as Input;
 use App\Http\Controllers\Controller;
-use Knox\Pesapal\Pesapal;
+use Pesapal;
+use Session;
 
 class PesapalAPIController extends Controller
 {
 
-    function handleCallback(Request $request){
-        $merchant_reference = Request::input('pesapal_merchant_reference');
-        $tracking_id = Request::input('pesapal_transaction_tracking_id');
-        Pesapal::redirectToCallback($merchant_reference,$tracking_id);
+    function handleCallback(){
+        $merchant_reference = Input::get('pesapal_merchant_reference');
+        $tracking_id = Input::get('pesapal_transaction_tracking_id');
+        $controller = Session::get('pesapal_haspaid_controller');
+        $route = Session::get('pesapal_callback_route');
+        return redirect($route.'/'.$tracking_id.'/'.$merchant_reference);
     }
 
-    function handleIPN(Request $request){
-        $notification_type = Request::input('pesapal_notification_type');
-        $merchant_reference = Request::input('pesapal_merchant_reference');
-        $tracking_id = Request::input('pesapal_transaction_tracking_id');
-        Pesapal::redirectToIPN($notification_type,$merchant_reference,$tracking_id);
+    function handleIPN(){
+        $notification_type = Input::get('pesapal_notification_type');
+        $merchant_reference = Input::get('pesapal_merchant_reference');
+        $tracking_id = Input::get('pesapal_transaction_tracking_id');
+        $pesapal = new Pesapal;
+        $pesapal -> redirectToIPN($notification_type,$merchant_reference,$tracking_id);
     }
 
     function test(){
@@ -28,16 +31,16 @@ class PesapalAPIController extends Controller
             'amount' => '10',
             'description' => 'Test',
             'type' => 'MERCHANT',
-            'first_name' => 'Tim',
-            'last_name' => 'Knox',
-            'email' => 'timothyradier@yahoo.com',
-            'phonenumber' => '254723238631',
-            'live' => true,
-            'callback_route' => ''
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'johndoe@google.com',
+            'phonenumber' => '254723232323',
+            'live' => false,
+            //'currency' => 'USD',
+            'callback_route' => 'donepayment'
         );
-        $pesapal = new Pesapal;
-        //dd($details);
-        $pesapal -> makePayment($details);
+
+        Pesapal::makePayment($details);
     }
 
 }

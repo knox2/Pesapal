@@ -1,13 +1,24 @@
 {
     "name": "knox/pesapal",
     "description": "A laravel package that integrates into the pesapal api",
+    "keywords": ["pesapal","laravel 5","MPESA","payments","VISA","Mastercard","Orange Money"],
+    "homepage": "https://github.com/knox2/pesapal",
     "license": "MIT",
     "authors": [
         {
             "name": "Timothy Radier",
-            "email": "timothyradier@gmail.com"
+            "email": "timothyradier@gmail.com",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/support": "5.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Knox\\Pesapal\\": "src/"
+        }
+    }
 }
