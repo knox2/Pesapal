@@ -14,7 +14,12 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.5.0",
+<<<<<<< HEAD
+        "illuminate/support": "5.*",
+        "illuminate/session": "5.*",
+=======
         "illuminate/support": "5.1.*"
+>>>>>>> master
     },
     "autoload": {
         "psr-4": {
