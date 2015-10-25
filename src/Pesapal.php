@@ -140,7 +140,7 @@ class Pesapal
            $components = explode(',', $elements[1]);
            $transaction_id = $components[1];
            $payment_method = $components[2];
-           $merchant_reference = $components[3]
+           $merchant_reference = $components[3];
            $status = $components[2];
 
            curl_close ($ch);
