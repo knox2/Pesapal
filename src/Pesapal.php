@@ -89,7 +89,7 @@ class Pesapal
 
         $iframe_src->sign_request($signature_method, $consumer, $token);
 
-        echo '<iframe src="'.$iframe_src.'" width="100%" height="720px" scrolling="auto" frameBorder="0"> <p>Unable to load the payment page</p> </iframe>';
+        return '<iframe src="'.$iframe_src.'" width="100%" height="720px" scrolling="auto" frameBorder="0"> <p>Unable to load the payment page</p> </iframe>';
     }
 
     function redirectToIPN($pesapalNotification,$pesapal_merchant_reference,$pesapalTrackingId){
@@ -98,7 +98,9 @@ class Pesapal
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
+        //$statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
+        
+        $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentdetails' : 'http://demo.pesapal.com/api/querypaymentdetails';
 
         if($pesapalNotification=="CHANGE" && $pesapalTrackingId!='')
         {
@@ -134,9 +136,19 @@ class Pesapal
 
            //transaction status
            $elements = preg_split("/=/",substr($response, $header_size));
-           $status = $elements[1];
+           //$status = $elements[1];
+           $components = explode(',', $elements[1]);
+           $transaction_id = $components[1];
+           $payment_method = $components[2];
+           $merchant_reference = $components[3]
+           $status = $components[2];
 
            curl_close ($ch);
+
+           if($status == 'PENDING'){
+              sleep(60);
+              redirectToIPN($pesapalNotification,$pesapal_merchant_reference,$pesapalTrackingId);
+            }
            
            //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
            $separator = explode('@', Session::get('pesapal_success_controller_method'));
@@ -144,7 +156,7 @@ class Pesapal
            $method = $separator[1];
            $class = '\App\Http\Controllers\\'.$separator[0];
            $payment = new $class();
-           $payment -> $method();
+           $payment -> $method($transaction_id,$status,$payment_method);
 
            if($status != "PENDING")
            {
