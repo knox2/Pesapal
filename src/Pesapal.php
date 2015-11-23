@@ -30,7 +30,8 @@ class Pesapal
             'phonenumber' => '',
             'live' => true,
             'callback_route' => '',
-            'success_controller_method' => '',
+            'width' => '100%',
+            'height' => '720px',
         );
 
 
@@ -43,8 +44,6 @@ class Pesapal
         $params = array_merge($defaults, $params);
 
         Session::put('pesapal_callback_route', $params['callback_route']);
-
-        Session::put('pesapal_success_controller_method', $params['success_controller_method']);
 
         Session::put('pesapal_is_live', $params['live']);
 
@@ -89,7 +88,7 @@ class Pesapal
 
         $iframe_src->sign_request($signature_method, $consumer, $token);
 
-        return '<iframe src="'.$iframe_src.'" width="100%" height="720px" scrolling="auto" frameBorder="0"> <p>Unable to load the payment page</p> </iframe>';
+        return '<iframe src="'.$iframe_src.'" width="'.$params['width'].'" height="'.$params['height'].'" scrolling="auto" frameBorder="0"> <p>Unable to load the payment page</p> </iframe>';
     }
 
     function redirectToIPN($pesapalNotification,$pesapal_merchant_reference,$pesapalTrackingId){
@@ -151,7 +150,7 @@ class Pesapal
             }
            
            //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
-           $separator = explode('@', Session::get('pesapal_success_controller_method'));
+           $separator = explode('@', config('pesapal.ipn'));
            $controller = $separator[0];
            $method = $separator[1];
            $class = '\App\Http\Controllers\\'.$separator[0];
