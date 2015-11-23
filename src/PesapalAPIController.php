@@ -14,8 +14,8 @@ class PesapalAPIController extends Controller
         $merchant_reference = Input::get('pesapal_merchant_reference');
         $tracking_id = Input::get('pesapal_transaction_tracking_id');
         $route = Session::get('pesapal_callback_route');
-        Session::put('pesapal_tracking_id', $tracking_id);
-        Session::put('pesapal_reference_id', $merchant_reference);
+        //Session::put('pesapal_tracking_id', $tracking_id);
+        //Session::put('pesapal_reference_id', $merchant_reference);
         //return redirect($route);array('nick' => $username)
         return redirect()->route($route,array('tracking_id' => $tracking_id,'merchant_reference' => $merchant_reference));
     }
