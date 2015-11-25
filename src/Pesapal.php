@@ -155,7 +155,7 @@ class Pesapal
            $method = $separator[1];
            $class = '\App\Http\Controllers\\'.$separator[0];
            $payment = new $class();
-           $payment -> $method($transaction_id,$status,$payment_method);
+           $payment -> $method($transaction_id,$status,$payment_method,$merchant_reference);
 
            if($status != "PENDING")
            {
