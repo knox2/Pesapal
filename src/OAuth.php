@@ -348,8 +348,10 @@ if(!class_exists("OAuthRequest") ) {
 	   */
 	  public function get_normalized_http_url() {
 		$parts = parse_url($this->http_url);
-	
-		$port = @$parts['port'];
+		if(array_key_exists('port',$parts))
+			$port = @$parts['port'];
+		else
+			$port = false;
 		$scheme = $parts['scheme'];
 		$host = $parts['host'];
 		$path = @$parts['path'];

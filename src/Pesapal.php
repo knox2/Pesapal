@@ -137,8 +137,8 @@ class Pesapal
            $elements = preg_split("/=/",substr($response, $header_size));
            //$status = $elements[1];
            $components = explode(',', $elements[1]);
-           $transaction_id = $components[1];
-           $payment_method = $components[2];
+           $transaction_id = $components[0];
+           $payment_method = $components[1];
            $merchant_reference = $components[3];
            $status = $components[2];
 
