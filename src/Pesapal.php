@@ -59,7 +59,7 @@ class Pesapal
         
         $iframelink = $params['live'] ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
 
-        $callback_url = url() . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
+        $callback_url = url('/') . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
        
         $post_xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
                         <PesapalDirectOrderInfo 
