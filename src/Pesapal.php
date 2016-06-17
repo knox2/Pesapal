@@ -218,10 +218,8 @@ class Pesapal
 
 
 
-    public function random_reference()
+    public function random_reference($prefix = 'PESAPAL',$length = 15)
     {
-        $length = 15;
-
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $str = '';
@@ -232,7 +230,7 @@ class Pesapal
             $str .= $keyspace[random_int(0, $max)];
         }
 
-        return 'PESAPAL'. $str;
+        return $prefix. $str;
     }
 
 }
