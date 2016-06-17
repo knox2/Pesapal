@@ -220,7 +220,7 @@ class Pesapal
 
     public function random_reference($prefix = 'PESAPAL',$length = 15)
     {
-        $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $keyspace = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $str = '';
 
