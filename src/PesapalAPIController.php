@@ -3,6 +3,7 @@
 namespace Knox\Pesapal;
 
 use Illuminate\Support\Facades\Input as Input;
+use Knox\Pesapal\Exceptions\PesapalException;
 use App\Http\Controllers\Controller;
 use Pesapal;
 use Session;
@@ -25,7 +26,7 @@ class PesapalAPIController extends Controller
             Pesapal::redirectToIPN($notification_type,$merchant_reference,$tracking_id);
         }
         else{
-            echo "Incorrect Parameters";
+            throw new PesapalException("Incorrect Parameters");
         }
     }
 

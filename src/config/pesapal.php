@@ -6,9 +6,11 @@ return [
 
 'consumer_secret' => env('PESAPAL_CONSUMER_SECRET') ,
 
-'currency' => env('PESAPAL_CURRENCY'),
+'currency' => env('PESAPAL_CURRENCY', 'KES'),
 
 'ipn' => env('PESAPAL_IPN'),
+
+'live' => env('PESAPAL_LIVE', true),
  
 ];
  

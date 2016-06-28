@@ -28,10 +28,9 @@ class Pesapal
             'email' => '',
             'currency' => 'KES',
             'phonenumber' => '',
-            'live' => true,
             'callback_route' => '',
             'width' => '100%',
-            'height' => '720px',
+            'height' => '100%',
         );
 
 
@@ -45,8 +44,6 @@ class Pesapal
 
         Session::put('pesapal_callback_route', $params['callback_route']);
 
-        Session::put('pesapal_is_live', $params['live']);
-
         unset($params['callback_route']);
  
         $token  = NULL;
@@ -57,7 +54,7 @@ class Pesapal
 
         $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
         
-        $iframelink = $params['live'] ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
+        $iframelink = config('pesapal.live') ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
 
         $callback_url = url('/') . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
        
@@ -97,9 +94,9 @@ class Pesapal
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        //$statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
+        //$statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
         
-        $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentdetails' : 'http://demo.pesapal.com/api/querypaymentdetails';
+        $statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentdetails' : 'http://demo.pesapal.com/api/querypaymentdetails';
 
         if($pesapalNotification=="CHANGE" && $pesapalTrackingId!='')
         {
@@ -176,7 +173,7 @@ class Pesapal
 
          $consumer_secret = config('pesapal.consumer_secret');
 
-         $statusrequestAPI = Session::get('pesapal_is_live') ? 'https://www.pesapal.com/api/querypaymentstatusbymerchantref' : 'http://demo.pesapal.com/api/querypaymentstatusbymerchantref';
+         $statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentstatusbymerchantref' : 'http://demo.pesapal.com/api/querypaymentstatusbymerchantref';
           
          $token = $params = NULL;
          $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
