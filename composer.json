@@ -21,7 +21,9 @@
             "Knox\\Pesapal\\": "src/"
         }
     },
-    "post-update-cmd": [
-        "php artisan vendor:publish --tag=pesapal --force",
-    ],
+    "scripts": {
+        "post-update-cmd": [
+            "php artisan vendor:publish --tag=pesapal --force"
+        ]
+    }
 }
