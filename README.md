@@ -35,7 +35,7 @@ PESAPAL\_CURRENCY `ISO code for the currency`<br/>
 
 PESAPAL\_IPN `controller method to call for instant notifications IPN eg TransactionController@confirmation`<br/>
 
-PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('pesapal-test', ['as' => 'test', 'uses'=>'PaymentsController@test']);  The route name is "test"`<br/>
+PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('donepayment', ['as' => 'paymentsuccess', 'uses'=>'PaymentsController@paymentsuccess']);  The route name is "paymentsuccess"`<br/>
 
 <b>NB: The controller method accepts 4 function parameters, Example:</b>
 
@@ -88,10 +88,10 @@ Returns an IFRAME to display the payment options
 <br/>
 
 The Method receives two input arguments<br/><br/>
-<b>Example implementation</b><br/>
+<b>Callback implementation</b><br/>
 
 ```
-public function paid()
+public function paymentsuccess()
 {
     $trackingid = Input::get('tracking_id');
     $ref = Input::get('merchant_reference');
