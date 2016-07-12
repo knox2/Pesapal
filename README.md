@@ -35,6 +35,8 @@ PESAPAL\_CURRENCY `ISO code for the currency`<br/>
 
 PESAPAL\_IPN `controller method to call for instant notifications IPN eg TransactionController@confirmation`<br/>
 
+PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('pesapal-test', ['as' => 'test', 'uses'=>'PaymentsController@test']);  The route name is "test"`<br/>
+
 <b>NB: The controller method accepts 4 function parameters, Example:</b>
 
 ```
@@ -77,19 +79,15 @@ public function payment(){
         'email' => 'johndoe@google.com', 
         'phonenumber' => '254723232323',
         'reference' => $payments -> transaction,
-        //'currency' => 'USD',
-        'callback_route' => 'paymentsuccess'
+        //'currency' => 'USD'
     );
     return Pesapal::makePayment($details);
 }
 ```
 Returns an IFRAME to display the payment options
+<br/>
 
-<b>The Callback route is the name of the route used after a successful payment</b><br/>
-Define it in your routes file eg<br/>
-`Route::get('donepayment', ['as' => 'paymentsuccess', 'uses'=>'PaymentsController@paid']);`
-
-The Method receives two input arguments<br/>
+The Method receives two input arguments<br/><br/>
 <b>Example implementation</b><br/>
 
 ```

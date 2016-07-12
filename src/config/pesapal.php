@@ -11,6 +11,8 @@ return [
 'ipn' => env('PESAPAL_IPN'),
 
 'live' => env('PESAPAL_LIVE', true),
+
+'callback_route' => env('PESAPAL_CALLBACK_ROUTE'),
  
 ];
  

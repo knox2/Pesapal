@@ -1,10 +1,10 @@
 <?php
 
 namespace Knox\Pesapal;
+use Knox\Pesapal\Exceptions\PesapalException;
+use Route;
 
 include 'OAuth.php';
-
-use Session;
 
 class Pesapal
 {
@@ -19,22 +19,21 @@ class Pesapal
     public function makePayment($params)
     {
         $defaults = array( // the defaults will be overidden if set in $params
-            'amount' => '',
-            'description' => '',
+            'amount' => '1',
+            'description' => 'sample description',
             'type' => 'MERCHANT',
             'reference' => $this -> random_reference(),
-            'first_name' => '',
-            'last_name' => '',
-            'email' => '',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'johndoe@example.com',
             'currency' => 'KES',
-            'phonenumber' => '',
-            'callback_route' => '',
+            'phonenumber' => '254712345678',
             'width' => '100%',
             'height' => '100%',
         );
 
 
-        if(!array_key_exists('currency',$params)){
+        if(!array_key_exists('currency', $params)){
             if(config('pesapal.currency') != null){
               $params['currency'] = config('pesapal.currency');
             }
@@ -42,9 +41,12 @@ class Pesapal
 
         $params = array_merge($defaults, $params);
 
-        Session::put('pesapal_callback_route', $params['callback_route']);
-
-        unset($params['callback_route']);
+        if(!config('pesapal.callback_route')){
+            throw new PesapalException("callback route not provided");
+        }
+        else if(!Route::has(config('pesapal.callback_route'))){
+            throw new PesapalException("callback route does not exist");
+        }
  
         $token  = NULL;
 

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Input as Input;
 use Knox\Pesapal\Exceptions\PesapalException;
 use App\Http\Controllers\Controller;
 use Pesapal;
-use Session;
 
 class PesapalAPIController extends Controller
 {
@@ -14,7 +13,7 @@ class PesapalAPIController extends Controller
     function handleCallback(){
         $merchant_reference = Input::get('pesapal_merchant_reference');
         $tracking_id = Input::get('pesapal_transaction_tracking_id');
-        $route = Session::get('pesapal_callback_route');
+        $route = config('pesapal.callback_route');
         return redirect()->route($route,array('tracking_id' => $tracking_id,'merchant_reference' => $merchant_reference));
     }
 
@@ -26,7 +25,7 @@ class PesapalAPIController extends Controller
             Pesapal::redirectToIPN($notification_type,$merchant_reference,$tracking_id);
         }
         else{
-            throw new PesapalException("Incorrect Parameters");
+            throw new PesapalException("incorrect parameters in request");
         }
     }
 
