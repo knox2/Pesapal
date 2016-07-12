@@ -29,11 +29,11 @@ Publish the configuration file and migrations by running the provided console co
 ###Environmental Variables
 PESAPAL\_CONSUMER\_KEY `pesapal consumer key`<br/>
 
-PESAPAL\_CONSUMER\_SECRET `pesapal cosumer secret`<br/>
+PESAPAL\_CONSUMER\_SECRET `pesapal consumer secret`<br/>
 
 PESAPAL\_CURRENCY `ISO code for the currency`<br/>
 
-PESAPAL\_IPN `controller method to call for instant notifications IPN eg TransactionController@confirmation`<br/>
+PESAPAL\_IPN `controller method to call for instant notifications IPN  as relative path from App\Http\Controllers\ eg "TransactionController@confirmation"`<br/>
 
 PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('donepayment', ['as' => 'paymentsuccess', 'uses'=>'PaymentsController@paymentsuccess']);  The route name is "paymentsuccess"`<br/>
 
