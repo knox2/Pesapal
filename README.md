@@ -58,47 +58,76 @@ The ENV Variables can also be set from here.
 At the top of your controller include the facade<br/>
 `use Pesapal;`
 
-###Example Code
+###Example Code...Better Example..Haha
 Assuming you have a Payment Model <br/>
 
 ```
-public function payment(){     
-    $payments = new Payments;
-	$payments -> order_id = mt_rand(1,1000);
-    $payments -> user_id = Auth::id();
-    $payments -> transaction = Pesapal::random_reference();
-    $payments -> payment_status = 'PENDING';
-    $payments -> amount = 10;
-    $payments -> save();
-    $details = array(
-        'amount' => $payments -> amount,
-        'description' => 'Test',
-        'type' => 'MERCHANT',
-        'first_name' => 'John',
-        'last_name' => 'Doe',
-        'email' => 'johndoe@google.com', 
-        'phonenumber' => '254723232323',
-        'reference' => $payments -> transaction,
-        //'currency' => 'USD'
-    );
-    return Pesapal::makePayment($details);
-}
-```
-Returns an IFRAME to display the payment options
-<br/>
+use Pesapal;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
+use App\Payment;
 
-The Method receives two input arguments<br/><br/>
-<b>Callback implementation</b><br/>
-
-```
-public function paymentsuccess()
+class PaymentsController extends Controller
 {
-    $trackingid = Input::get('tracking_id');
-    $ref = Input::get('merchant_reference');
-	$payments = Payments::where('transaction',$ref)->first();
-    $payments -> tracking = $trackingid;
-    $payments -> save();
-    return view('payment', ['trackingid' => $trackingid, 'ref' => $ref]);
+    public function payment(){//initiates payment
+        $payments = new Payment;
+        $payments -> businessid = Auth::guard('business')->id(); //Business ID
+        $payments -> transactionid = Pesapal::random_reference();
+        $payments -> status = 'NEW';
+        $payments -> type = 'PESAPAL';
+        $payments -> amount = 10;
+        $payments -> save();
+
+        $details = array(
+            'amount' => $payments -> amount,
+            'description' => 'Test Transaction',
+            'type' => 'MERCHANT',
+            'first_name' => 'Evans',
+            'last_name' => 'Ndegwa',
+            'email' => 'info@muva.co.ke',
+            'phonenumber' => '254723220235',
+            'reference' => $payments -> transactionid,
+            'height'=>'400px',
+            //'currency' => 'USD'
+        );
+        $iframe=Pesapal::makePayment($details);
+
+        return view('payments.business.pesapal', compact('iframe'));
+    }
+    public function paymentsuccess(Request $request)//just tells u payment has gone thru..but not confirmed
+    {
+        $trackingid = $request->input('tracking_id');
+        $ref = $request->input('merchant_reference');
+
+        $payments = Payment::where('transactionid',$ref)->first();
+        $payments -> trackingid = $trackingid;
+        $payments -> status = 'PENDING';
+        $payments -> save();
+        //go back home
+        $payments=Payment::all();
+        return view('payments.business.home', compact('payments'));
+    }
+    //This method just tells u that there is a change in pesapal for your transaction..
+    //u need to now query status..retrieve the change...CANCELLED? CONFIRMED?
+    public function paymentconfirmation(Request $request)
+    {
+        $trackingid = $request->input('pesapal_transaction_tracking_id');
+        $merchant_reference = $request->input('pesapal_merchant_reference');
+        $pesapal_notification_type= $request->input('pesapal_notification_type');
+
+        //use the above to retrieve payment status now..
+        $this->checkpaymentstatus($trackingid,$merchant_reference,$pesapal_notification_type);
+    }
+    //Confirm status of transaction and update the DB
+    public function checkpaymentstatus($trackingid,$merchant_reference,$pesapal_notification_type){
+        $status=Pesapal::getMerchantStatus($merchant_reference);
+        $payments = Payment::where('trackingid',$trackingid)->first();
+        $payments -> status = $status;
+        $payments -> payment_method = "PESAPAL";//use the actual method though.
+        $payments -> save();
+        return "success";
+    }
 }
 ```
 
