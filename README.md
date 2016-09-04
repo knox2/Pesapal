@@ -74,8 +74,7 @@ class PaymentsController extends Controller
         $payments = new Payment;
         $payments -> businessid = Auth::guard('business')->id(); //Business ID
         $payments -> transactionid = Pesapal::random_reference();
-        $payments -> status = 'NEW';
-        $payments -> type = 'PESAPAL';
+        $payments -> status = 'NEW'; //if user gets to iframe then exits, i prefer to have that as a new/lost transaction, not pending
         $payments -> amount = 10;
         $payments -> save();
 
@@ -83,10 +82,10 @@ class PaymentsController extends Controller
             'amount' => $payments -> amount,
             'description' => 'Test Transaction',
             'type' => 'MERCHANT',
-            'first_name' => 'Evans',
-            'last_name' => 'Ndegwa',
-            'email' => 'info@muva.co.ke',
-            'phonenumber' => '254723220235',
+            'first_name' => 'Fname',
+            'last_name' => 'Lname',
+            'email' => 'test@test.com',
+            'phonenumber' => '254-723232323',
             'reference' => $payments -> transactionid,
             'height'=>'400px',
             //'currency' => 'USD'
@@ -124,7 +123,7 @@ class PaymentsController extends Controller
         $status=Pesapal::getMerchantStatus($merchant_reference);
         $payments = Payment::where('trackingid',$trackingid)->first();
         $payments -> status = $status;
-        $payments -> payment_method = "PESAPAL";//use the actual method though.
+        $payments -> payment_method = "PESAPAL";//use the actual method though...
         $payments -> save();
         return "success";
     }
