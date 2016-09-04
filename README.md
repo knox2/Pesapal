@@ -130,11 +130,14 @@ class PaymentsController extends Controller
 }
 ```
 ####Example ENV
+
+```
  PESAPAL_IPN=PaymentsController@paymentconfirmation
  PESAPAL_LIVE=true
  PESAPAL_CALLBACK_ROUTE=paymentsuccess
- 
+```
 ####relevant routes example...to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware
+
 ```
 Route::group(['prefix' => '/webhooks'], function () {
     //PESAPAL
