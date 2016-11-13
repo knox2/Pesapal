@@ -14,11 +14,13 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthDataStore {
+class OAuthDataStore
+{
     /**
      * @param $consumer_key
      */
-    function lookup_consumer($consumer_key) {
+    function lookup_consumer($consumer_key)
+    {
         // implement me
     }
 
@@ -27,7 +29,8 @@ class OAuthDataStore {
      * @param $token_type
      * @param $token
      */
-    function lookup_token($consumer, $token_type, $token) {
+    function lookup_token($consumer, $token_type, $token)
+    {
         // implement me
     }
 
@@ -37,14 +40,16 @@ class OAuthDataStore {
      * @param $nonce
      * @param $timestamp
      */
-    function lookup_nonce($consumer, $token, $nonce, $timestamp) {
+    function lookup_nonce($consumer, $token, $nonce, $timestamp)
+    {
         // implement me
     }
 
     /**
      * @param $consumer
      */
-    function new_request_token($consumer) {
+    function new_request_token($consumer)
+    {
         // return a new token attached to this consumer
     }
 
@@ -52,7 +57,8 @@ class OAuthDataStore {
      * @param $token
      * @param $consumer
      */
-    function new_access_token($token, $consumer) {
+    function new_access_token($token, $consumer)
+    {
         // return a new access token attached to this consumer
         // for the user associated with this token if the request token
         // is authorized

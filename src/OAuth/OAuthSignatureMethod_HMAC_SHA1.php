@@ -14,11 +14,13 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod {
+class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
+{
     /**
      * @return string
      */
-    function get_name() {
+    function get_name()
+    {
         return "HMAC-SHA1";
     }
 
@@ -29,7 +31,8 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod {
      *
      * @return string
      */
-    public function build_signature($request, $consumer, $token) {
+    public function build_signature($request, $consumer, $token)
+    {
         $base_string = $request->get_signature_base_string();
         $request->base_string = $base_string;
 

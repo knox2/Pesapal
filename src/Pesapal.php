@@ -13,7 +13,8 @@ use Route;
  *
  * @package Knox\Pesapal
  */
-class Pesapal {
+class Pesapal
+{
     /**
      * Processes the payment to pesapal
      *
@@ -28,19 +29,20 @@ class Pesapal {
      * @return string
      * @throws \Knox\Pesapal\Exceptions\PesapalException
      */
-    public function makePayment($params) {
+    public function makePayment($params)
+    {
         $defaults = [ // the defaults will be overidden if set in $params
-                      'amount'      => '1',
+                      'amount' => '1',
                       'description' => 'sample description',
-                      'type'        => 'MERCHANT',
-                      'reference'   => $this->random_reference(),
-                      'first_name'  => 'John',
-                      'last_name'   => 'Doe',
-                      'email'       => 'johndoe@example.com',
-                      'currency'    => 'KES',
+                      'type' => 'MERCHANT',
+                      'reference' => $this->random_reference(),
+                      'first_name' => 'John',
+                      'last_name' => 'Doe',
+                      'email' => 'johndoe@example.com',
+                      'currency' => 'KES',
                       'phonenumber' => '254712345678',
-                      'width'       => '100%',
-                      'height'      => '100%',
+                      'width' => '100%',
+                      'height' => '100%',
         ];
 
 
@@ -54,8 +56,10 @@ class Pesapal {
 
         if (!config('pesapal.callback_route')) {
             throw new PesapalException("callback route not provided");
-        } else if (!Route::has(config('pesapal.callback_route'))) {
-            throw new PesapalException("callback route does not exist");
+        } else {
+            if (!Route::has(config('pesapal.callback_route'))) {
+                throw new PesapalException("callback route does not exist");
+            }
         }
 
         $token = NULL;
@@ -105,7 +109,8 @@ class Pesapal {
      * @param $pesapal_merchant_reference
      * @param $pesapalTrackingId
      */
-    function redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId) {
+    function redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId)
+    {
 
         $consumer_key = config('pesapal.consumer_key');
 
@@ -121,7 +126,8 @@ class Pesapal {
             $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
 
             //get transaction status
-            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $statusrequestAPI, $params);
+            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $statusrequestAPI,
+                $params);
             $request_status->set_parameter("pesapal_merchant_reference", $pesapal_merchant_reference);
             $request_status->set_parameter("pesapal_transaction_tracking_id", $pesapalTrackingId);
             $request_status->sign_request($signature_method, $consumer, $token);
@@ -131,11 +137,13 @@ class Pesapal {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_HEADER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            if (defined('CURL_PROXY_REQUIRED')) if (CURL_PROXY_REQUIRED == 'True') {
-                $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
-                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
-                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-                curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+            if (defined('CURL_PROXY_REQUIRED')) {
+                if (CURL_PROXY_REQUIRED == 'True') {
+                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
+                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                }
             }
 
             $response = curl_exec($ch);
@@ -186,7 +194,8 @@ class Pesapal {
      *
      * @return mixed
      */
-    function getMerchantStatus($pesapal_merchant_reference) {
+    function getMerchantStatus($pesapal_merchant_reference)
+    {
 
         $consumer_key = config('pesapal.consumer_key');
 
@@ -208,11 +217,13 @@ class Pesapal {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        if (defined('CURL_PROXY_REQUIRED')) if (CURL_PROXY_REQUIRED == 'True') {
-            $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
-            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-            curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+        if (defined('CURL_PROXY_REQUIRED')) {
+            if (CURL_PROXY_REQUIRED == 'True') {
+                $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
+                curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+            }
         }
 
         $response = curl_exec($ch);
@@ -234,11 +245,12 @@ class Pesapal {
 
     /**
      * @param string $prefix
-     * @param int    $length
+     * @param int $length
      *
      * @return string
      */
-    public function random_reference($prefix = 'PESAPAL', $length = 15) {
+    public function random_reference($prefix = 'PESAPAL', $length = 15)
+    {
         $keyspace = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         $str = '';

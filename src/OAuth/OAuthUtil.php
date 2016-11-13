@@ -14,26 +14,30 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthUtil {
+class OAuthUtil
+{
     /**
      * @param $input
      *
      * @return array|mixed|string
      */
-    public static function urlencode_rfc3986($input) {
+    public static function urlencode_rfc3986($input)
+    {
         if (is_array($input)) {
             return array_map([
                 'Knox\Pesapal\OAuthUtil',
                 'urlencode_rfc3986',
             ], $input);
-        } else if (is_scalar($input)) {
-            return str_replace(
-                '+',
-                ' ',
-                str_replace('%7E', '~', rawurlencode($input))
-            );
         } else {
-            return '';
+            if (is_scalar($input)) {
+                return str_replace(
+                    '+',
+                    ' ',
+                    str_replace('%7E', '~', rawurlencode($input))
+                );
+            } else {
+                return '';
+            }
         }
     }
 
@@ -46,7 +50,8 @@ class OAuthUtil {
      *
      * @return string
      */
-    public static function urldecode_rfc3986($string) {
+    public static function urldecode_rfc3986($string)
+    {
         return urldecode($string);
     }
 
@@ -59,7 +64,8 @@ class OAuthUtil {
      *
      * @return array
      */
-    public static function split_header($header, $only_allow_oauth_parameters = true) {
+    public static function split_header($header, $only_allow_oauth_parameters = true)
+    {
         $pattern = '/(([-_a-z]*)=("([^"]*)"|([^,]*)),?)/';
         $offset = 0;
         $params = [];
@@ -84,7 +90,8 @@ class OAuthUtil {
     /**
      * @return array|false
      */
-    public static function get_headers() {
+    public static function get_headers()
+    {
         if (function_exists('apache_request_headers')) {
             // we need this to get the actual Authorization: header
             // because apache tends to tell us it doesn't exist
@@ -118,8 +125,11 @@ class OAuthUtil {
      *
      * @return array
      */
-    public static function parse_parameters($input) {
-        if (!isset($input) || !$input) return [];
+    public static function parse_parameters($input)
+    {
+        if (!isset($input) || !$input) {
+            return [];
+        }
 
         $pairs = split('&', $input);
 
@@ -153,8 +163,11 @@ class OAuthUtil {
      *
      * @return string
      */
-    public static function build_http_query($params) {
-        if (!$params) return '';
+    public static function build_http_query($params)
+    {
+        if (!$params) {
+            return '';
+        }
 
         // Urlencode both keys and values
         $keys = OAuthUtil::urlencode_rfc3986(array_keys($params));

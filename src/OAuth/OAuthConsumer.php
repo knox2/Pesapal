@@ -14,7 +14,8 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthConsumer {
+class OAuthConsumer
+{
     /**
      * @var
      */
@@ -31,7 +32,8 @@ class OAuthConsumer {
      * @param      $secret
      * @param null $callback_url
      */
-    function __construct($key, $secret, $callback_url = NULL) {
+    function __construct($key, $secret, $callback_url = NULL)
+    {
         $this->key = $key;
         $this->secret = $secret;
         $this->callback_url = $callback_url;
@@ -40,7 +42,8 @@ class OAuthConsumer {
     /**
      * @return string
      */
-    function __toString() {
+    function __toString()
+    {
         return "OAuthConsumer[key=$this->key,secret=$this->secret]";
     }
 }

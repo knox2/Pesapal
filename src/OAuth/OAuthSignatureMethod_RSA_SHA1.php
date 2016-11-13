@@ -16,11 +16,13 @@ use Knox\Pesapal\OAuth\Exceptions\OAuthException;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
+class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
+{
     /**
      * @return string
      */
-    public function get_name() {
+    public function get_name()
+    {
         return "RSA-SHA1";
     }
 
@@ -29,7 +31,8 @@ class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
      *
      * @throws \Knox\Pesapal\OAuth\Exceptions\OAuthException
      */
-    protected function fetch_public_cert(&$request) {
+    protected function fetch_public_cert(&$request)
+    {
         // not implemented yet, ideas are:
         // (1) do a lookup in a table of trusted certs keyed off of consumer
         // (2) fetch via http using a url provided by the requester
@@ -44,7 +47,8 @@ class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
      *
      * @throws \Knox\Pesapal\OAuth\Exceptions\OAuthException
      */
-    protected function fetch_private_cert(&$request) {
+    protected function fetch_private_cert(&$request)
+    {
         // not implemented yet, ideas are:
         // (1) do a lookup in a table of trusted certs keyed off of consumer
         //
@@ -59,7 +63,8 @@ class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
      *
      * @return string
      */
-    public function build_signature(&$request, $consumer, $token) {
+    public function build_signature(&$request, $consumer, $token)
+    {
         $base_string = $request->get_signature_base_string();
         $request->base_string = $base_string;
 
@@ -86,7 +91,8 @@ class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
      *
      * @return bool
      */
-    public function check_signature(&$request, $consumer, $token, $signature) {
+    public function check_signature(&$request, $consumer, $token, $signature)
+    {
         $decoded_sig = base64_decode($signature);
 
         $base_string = $request->get_signature_base_string();

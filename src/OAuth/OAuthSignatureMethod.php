@@ -14,7 +14,8 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthSignatureMethod {
+class OAuthSignatureMethod
+{
     /**
      * @param $request
      * @param $consumer
@@ -23,7 +24,8 @@ class OAuthSignatureMethod {
      *
      * @return bool
      */
-    public function check_signature(&$request, $consumer, $token, $signature) {
+    public function check_signature(&$request, $consumer, $token, $signature)
+    {
         $built = $this->build_signature($request, $consumer, $token);
 
         return $built == $signature;

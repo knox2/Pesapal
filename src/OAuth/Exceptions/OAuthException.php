@@ -16,6 +16,7 @@ use Exception;
  *
  * @package Knox\Pesapal\OAuth\Exceptions
  */
-class OAuthException extends Exception {
+class OAuthException extends Exception
+{
     // Pass
 }

@@ -14,11 +14,13 @@ namespace Knox\Pesapal\OAuth;
  *
  * @package Knox\Pesapal\OAuth
  */
-class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod {
+class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
+{
     /**
      * @return string
      */
-    public function get_name() {
+    public function get_name()
+    {
         return "PLAINTEXT";
     }
 
@@ -29,7 +31,8 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod {
      *
      * @return mixed
      */
-    public function build_signature($request, $consumer, $token) {
+    public function build_signature($request, $consumer, $token)
+    {
         $sig = [
             OAuthUtil::urlencode_rfc3986($consumer->secret),
         ];
