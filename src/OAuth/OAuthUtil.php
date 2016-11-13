@@ -25,7 +25,7 @@ class OAuthUtil
     {
         if (is_array($input)) {
             return array_map([
-                'Knox\Pesapal\OAuthUtil',
+                self::class,
                 'urlencode_rfc3986',
             ], $input);
         } else {
