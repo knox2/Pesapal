@@ -25,9 +25,9 @@ class PesapalServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        include __DIR__.'/routes.php';
-        
-        $this->app['pesapal'] = $this->app->share(function($app) {
+        include __DIR__ . '/routes.php';
+
+        $this->app['pesapal'] = $this->app->share(function ($app) {
             return new Pesapal;
         });
     }
