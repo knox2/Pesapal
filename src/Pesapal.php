@@ -2,6 +2,7 @@
 
 namespace Knox\Pesapal;
 
+use Knox\Pesapal\Contracts\PesapalContract;
 use Knox\Pesapal\Exceptions\PesapalException;
 use Knox\Pesapal\OAuth\OAuthConsumer;
 use Knox\Pesapal\OAuth\OAuthRequest;
@@ -13,7 +14,7 @@ use Route;
  *
  * @package Knox\Pesapal
  */
-class Pesapal
+class Pesapal implements PesapalContract
 {
     /**
      * Processes the payment to pesapal
