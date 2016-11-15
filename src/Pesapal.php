@@ -70,7 +70,7 @@ class Pesapal
 
         $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
 
-        $iframelink = config('pesapal.live') ? 'https://www.pesapal.com/API/PostPesapalDirectOrderV4' : 'http://demo.pesapal.com/api/PostPesapalDirectOrderV4';
+        $iframelink = $this->api_link('PostPesapalDirectOrderV4');
 
         $callback_url = url('/') . '/pesapal-callback'; //redirect url, the page that will handle the response from pesapal.
 
@@ -116,9 +116,7 @@ class Pesapal
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        //$statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentstatus' : 'http://demo.pesapal.com/api/querypaymentstatus';
-
-        $statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentdetails' : 'http://demo.pesapal.com/api/querypaymentdetails';
+        $statusrequestAPI = $this->api_link('querypaymentdetails');
 
         if ($pesapalNotification == "CHANGE" && $pesapalTrackingId != '') {
             $token = $params = NULL;
@@ -201,7 +199,7 @@ class Pesapal
 
         $consumer_secret = config('pesapal.consumer_secret');
 
-        $statusrequestAPI = config('pesapal.live') ? 'https://www.pesapal.com/api/querypaymentstatusbymerchantref' : 'http://demo.pesapal.com/api/querypaymentstatusbymerchantref';
+        $statusrequestAPI = $this->api_link('querypaymentstatusbymerchantref');
 
         $token = $params = NULL;
         $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
@@ -262,6 +260,18 @@ class Pesapal
         }
 
         return $prefix . $str;
+    }
+
+    /**
+     * Get API path
+     * @param null $path
+     * @return string
+     */
+    public function api_link($path = null)
+    {
+        $live = 'https://www.pesapal.com/api/';
+        $demo = 'https://demo.pesapal.com/api/';
+        return (config('pesapal.live') ? $live : $demo) . $path;
     }
 
 }
