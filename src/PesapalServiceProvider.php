@@ -27,7 +27,7 @@ class PesapalServiceProvider extends ServiceProvider
     {
         include __DIR__ . '/routes.php';
 
-        $this->app->singleton('pesapal' function ($app) {
+        $this->app->singleton('pesapal',function () {
             return new Pesapal;
         });
     }
