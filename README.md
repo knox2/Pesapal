@@ -39,7 +39,7 @@ PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('donepa
 
 <b>NB: The controller method accepts 4 function parameters, Example:</b>
 
-```
+```php
 public function confirmation($trackingid,$status,$payment_method,$merchant_reference)
 {
 	$payments = Payments::where('tracking',$trackingid)->first();
@@ -61,7 +61,7 @@ At the top of your controller include the facade<br/>
 ### Example Code...Better Example..Haha
 Assuming you have a Payment Model <br/>
 
-```
+```php
 use Pesapal;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -139,7 +139,7 @@ class PaymentsController extends Controller
 #### Example Routes
 Relevant routes example, to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware<br/>
 
-```
+```php
 Route::group(['prefix' => '/webhooks'], function () {
     //PESAPAL
     Route::get('donepayment', ['as' => 'paymentsuccess', 'uses'=>'PaymentsController@paymentsuccess']);
