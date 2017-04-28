@@ -1,15 +1,15 @@
 # Pesapal Laravel 5 API
 Laravel 5 Package for the Pesapal API
 
-##Installation
+## Installation
 
-###Add this package using Composer
+### Add this package using Composer
 
 From the command line inside your project directory, simply type:
 
 `composer require knox/pesapal`
 
-###Update your config
+### Update your config
 
 Add the service provider to the providers array in config/app.php:
 
@@ -19,14 +19,14 @@ Add the facade to the aliases array in config/app.php:
 
 `'Pesapal' => Knox\Pesapal\Facades\Pesapal::class,` 
 
-###Publish the package configuration
+### Publish the package configuration
 
 Publish the configuration file and migrations by running the provided console command:
 
 `php artisan vendor:publish --provider="Knox\Pesapal\PesapalServiceProvider"`
 
-##Setup
-###Environmental Variables
+## Setup
+### Environmental Variables
 PESAPAL\_CONSUMER\_KEY `pesapal consumer key`<br/>
 
 PESAPAL\_CONSUMER\_SECRET `pesapal consumer secret`<br/>
@@ -49,16 +49,16 @@ public function confirmation($trackingid,$status,$payment_method,$merchant_refer
 }       
 ```
 
-###Config
+### Config
 <b>live</b> - Live or Demo environment<br/>
 
 The ENV Variables can also be set from here.
 
-##Usage
+## Usage
 At the top of your controller include the facade<br/>
 `use Pesapal;`
 
-###Example Code...Better Example..Haha
+### Example Code...Better Example..Haha
 Assuming you have a Payment Model <br/>
 
 ```
@@ -129,14 +129,14 @@ class PaymentsController extends Controller
     }
 }
 ```
-####Example ENV
+#### Example ENV
 
 ```
  PESAPAL_IPN=PaymentsController@paymentconfirmation
  PESAPAL_LIVE=true
  PESAPAL_CALLBACK_ROUTE=paymentsuccess
 ```
-####relevant routes example...to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware
+#### relevant routes example...to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware
 
 ```
 Route::group(['prefix' => '/webhooks'], function () {
@@ -146,7 +146,7 @@ Route::group(['prefix' => '/webhooks'], function () {
 });
  ```
  
-####All Done
+#### All Done
 Feel free to report any issues
 
 
