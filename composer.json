@@ -1,29 +1,47 @@
 {
-    "name": "knox/pesapal",
-    "description": "A laravel package that integrates into the pesapal api",
-    "keywords": ["pesapal","laravel 5","MPESA","payments","VISA","Mastercard","Orange Money"],
-    "homepage": "https://github.com/knox2/pesapal",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Timothy Radier",
-            "email": "timothyradier@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=5.5.0",
-        "illuminate/support": "5.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Knox\\Pesapal\\": "src/"
-        }
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "php artisan vendor:publish --tag=pesapal --force"
-        ]
+  "name": "knox/pesapal",
+  "description": "A laravel package that integrates into the pesapal api",
+  "keywords": [
+    "pesapal",
+    "laravel 5",
+    "MPESA",
+    "payments",
+    "VISA",
+    "Mastercard",
+    "Orange Money"
+  ],
+  "homepage": "https://github.com/knox2/pesapal",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Timothy Radier",
+      "email": "timothyradier@gmail.com",
+      "role": "Developer"
     }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.5.0",
+    "illuminate/support": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Knox\\Pesapal\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "php artisan vendor:publish --tag=pesapal --force"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Knox\\Pesapal\\PesapalServiceProvider"
+      ],
+      "aliases": {
+        "Pesapal": "Knox\\Pesapal\\Facades\\Pesapal"
+      }
+    }
+  }
 }
