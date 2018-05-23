@@ -136,6 +136,11 @@ class PaymentsController extends Controller
  PESAPAL_LIVE=true
  PESAPAL_CALLBACK_ROUTE=paymentsuccess
 ```
+#### Example View
+
+```
+ {{ iframe }}
+```
 #### Example Routes
 Relevant routes example, to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware<br/>
 
