@@ -26,6 +26,9 @@ Publish the configuration file and migrations by running the provided console co
 `php artisan vendor:publish --provider="Knox\Pesapal\PesapalServiceProvider"`
 
 ## Setup
+### Pesapal IPN
+For the url of the route use /pesapal-ipn eg mysite.com/pesapal-ipn as the IPN on the Pesapal Merchant settings dashboard
+ 
 ### Environmental Variables
 PESAPAL\_CONSUMER\_KEY `pesapal consumer key`<br/>
 
