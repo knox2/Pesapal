@@ -27,8 +27,8 @@ Publish the configuration file and migrations by running the provided console co
 
 ## Setup
 ### Pesapal IPN
-For the url of the route use /pesapal-ipn eg mysite.com/pesapal-ipn as the IPN on the Pesapal Merchant settings dashboard
- 
+For the url of the route use /pesapal-ipn eg mysite.com/pesapal-ipn as the IPN on the Pesapal Merchant settings dashboard.
+Also, remember to add this url to the excluded routes in Csrf check in VerifyCsrfToken Middleware
 ### Environmental Variables
 PESAPAL\_CONSUMER\_KEY `pesapal consumer key`<br/>
 
@@ -110,18 +110,19 @@ class PaymentsController extends Controller
         $payments=Payment::all();
         return view('payments.business.home', compact('payments'));
     }
-    //This method just tells u that there is a change in pesapal for your transaction..
-    //u need to now query status..retrieve the change...CANCELLED? CONFIRMED?
-    public function paymentconfirmation(Request $request)
+    
+    //Once the IPN route receives a notification from Pesapal, it calls this method in your controller as specified in .env 
+    //It passes in the parameters which you can save to DB
+    public function paymentconfirmation($transaction_id, $status, $payment_method, $merchant_referenc)
     {
-        $trackingid = $request->input('pesapal_transaction_tracking_id');
-        $merchant_reference = $request->input('pesapal_merchant_reference');
-        $pesapal_notification_type= $request->input('pesapal_notification_type');
-
-        //use the above to retrieve payment status now..
-        $this->checkpaymentstatus($trackingid,$merchant_reference,$pesapal_notification_type);
+        $payment = where('trackingid',$trackingid)->first();
+        $payment->status=$status;
+        $payment->payment_method=$payment_method;
+        $payment -> save();
+        return "success";
     }
-    //Confirm status of transaction and update the DB
+    
+    //You can call this method to confirm status of transaction and update the DB
     public function checkpaymentstatus($trackingid,$merchant_reference,$pesapal_notification_type){
         $status=Pesapal::getMerchantStatus($merchant_reference);
         $payments = Payment::where('trackingid',$trackingid)->first();
@@ -139,11 +140,6 @@ class PaymentsController extends Controller
  PESAPAL_LIVE=true
  PESAPAL_CALLBACK_ROUTE=paymentsuccess
 ```
-#### Example View
-
-```
- {{ iframe }}
-```
 #### Example Routes
 Relevant routes example, to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware<br/>
 
@@ -151,7 +147,6 @@ Relevant routes example, to help exclude entire webhooks route group in Csrf che
 Route::group(['prefix' => '/webhooks'], function () {
     //PESAPAL
     Route::get('donepayment', ['as' => 'paymentsuccess', 'uses'=>'PaymentsController@paymentsuccess']);
-    Route::get('paymentconfirmation', 'PaymentsController@paymentconfirmation');
 });
  ```
  

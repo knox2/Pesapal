@@ -110,9 +110,8 @@ class Pesapal implements PesapalContract
      * @param $pesapal_merchant_reference
      * @param $pesapalTrackingId
      */
-    function redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId)
+    public function redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId)
     {
-
         $consumer_key = config('pesapal.consumer_key');
 
         $consumer_secret = config('pesapal.consumer_secret');
@@ -161,11 +160,12 @@ class Pesapal implements PesapalContract
             $merchant_reference = $components[3];
             $status = $components[2];
 
+            //$payment->$method($transaction_id, $status, $payment_method, $merchant_reference);
             curl_close($ch);
 
             if ($status == 'PENDING') {
                 sleep(60);
-                redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId);
+                $this->redirectToIPN($pesapalNotification, $pesapal_merchant_reference, $pesapalTrackingId);
             }
 
             //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
@@ -175,7 +175,6 @@ class Pesapal implements PesapalContract
             $class = '\App\Http\Controllers\\' . $separator[0];
             $payment = new $class();
             $payment->$method($transaction_id, $status, $payment_method, $merchant_reference);
-
             if ($status != "PENDING") {
                 $resp = "pesapal_notification_type=$pesapalNotification&pesapal_transaction_tracking_id=$pesapalTrackingId&pesapal_merchant_reference=$pesapal_merchant_reference";
                 ob_start();
@@ -183,8 +182,8 @@ class Pesapal implements PesapalContract
                 ob_flush();
                 exit;
             }
-        }
 
+        }
     }
 
 
