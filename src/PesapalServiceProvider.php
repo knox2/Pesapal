@@ -15,7 +15,11 @@ class PesapalServiceProvider extends ServiceProvider
     {
         // Publish config
         $configPath = __DIR__ . '/config/pesapal.php';
-        $this->publishes([$configPath => config_path('pesapal.php')], 'pesapal');
+        $this->publishes([$configPath => config_path('pesapal.php')], 'config');
+        /*
+         * replace the register include with the below
+         */
+        //$this->loadRoutesFrom(__DIR__.'/routes.php');
     }
 
     /**

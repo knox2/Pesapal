@@ -1,4 +1,4 @@
-# Pesapal Laravel 5 API
+# Pesapal Laravel 5,6 API
 Laravel 5 Package for the Pesapal API
 
 ## Installation
@@ -9,7 +9,7 @@ From the command line inside your project directory, simply type:
 
 `composer require knox/pesapal`
 
-### Update your config
+### Update your config (for Laravel 5.4 and below)
 
 Add the service provider to the providers array in config/app.php:
 
@@ -19,7 +19,7 @@ Add the facade to the aliases array in config/app.php:
 
 `'Pesapal' => Knox\Pesapal\Facades\Pesapal::class,` 
 
-### Publish the package configuration
+### Publish the package configuration (for Laravel 5.4 and below)
 
 Publish the configuration file and migrations by running the provided console command:
 
