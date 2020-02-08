@@ -3,7 +3,7 @@
   "description": "A laravel package that integrates into the pesapal api",
   "keywords": [
     "pesapal",
-    "laravel 5,6",
+    "laravel 5 6",
     "MPESA",
     "payments",
     "VISA",
