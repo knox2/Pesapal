@@ -190,10 +190,10 @@ class Pesapal implements PesapalContract
 
     /**
      * @param $pesapal_merchant_reference
-     *
+     * @param $tracking_id
      * @return mixed
      */
-    function getMerchantStatus($pesapal_merchant_reference)
+    function getMerchantStatus($pesapal_merchant_reference, $tracking_id=null)
     {
 
         $consumer_key = config('pesapal.consumer_key');
@@ -201,7 +201,9 @@ class Pesapal implements PesapalContract
         $consumer_secret = config('pesapal.consumer_secret');
 
         $statusrequestAPI = $this->api_link('querypaymentstatusbymerchantref');
-
+        if($tracking_id && $tracking_id){
+           $statusrequestAPI = $this->api_link('QueryPaymentDetails');
+        }
         $token = $params = NULL;
         $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
         $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
@@ -209,6 +211,9 @@ class Pesapal implements PesapalContract
         //get transaction status
         $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, "GET", $statusrequestAPI, $params);
         $request_status->set_parameter("pesapal_merchant_reference", $pesapal_merchant_reference);
+        if($tracking_id){
+            $request_status->set_parameter("pesapal_transaction_tracking_id", $tracking_id);
+        }
         $request_status->sign_request($signature_method, $consumer, $token);
 
         $ch = curl_init();
@@ -235,12 +240,18 @@ class Pesapal implements PesapalContract
         //transaction status
         $elements = preg_split("/=/", substr($response, $header_size));
         $status = $elements[1];
-
+        if($tracking_id){
+            $status = explode(",",$elements[1]);
+		    $statusArray=array('pesapal_transaction_tracking_id'=>$status[0],
+				   'payment_method'=>$status[1],
+				   'status'=>$status[2],
+                   'pesapal_merchant_reference'=>$status[3]);
+            $status = $statusArray;
+        }
         curl_close($ch);
 
         return $status;
     }
-
 
     /**
      * @param string $prefix
