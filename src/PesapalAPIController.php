@@ -31,6 +31,5 @@ class PesapalAPIController extends Controller
             throw new PesapalException("incorrect parameters in request");
         }
     }
-
     // Test bleeding edge
 }
