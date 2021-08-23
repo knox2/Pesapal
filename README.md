@@ -1,5 +1,5 @@
-# Pesapal Laravel 5,6 API
-Laravel 5,6 Package for the Pesapal API
+# Pesapal Laravel 5,6,7,8 API
+Laravel 5,6,7,8 Package for the Pesapal API
 
 ## Installation
 
