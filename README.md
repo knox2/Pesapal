@@ -1,5 +1,5 @@
-# Pesapal Laravel 5,6,7,8 API
-Laravel 5,6,7,8 Package for the Pesapal API
+# Pesapal Laravel 5,6,7,8,9 API
+Laravel 5,6,7,8,9 Package for the Pesapal API
 
 ## Installation
 
@@ -142,7 +142,7 @@ class PaymentsController extends Controller
 #### Example View
 
 ```
- {{ iframe }}
+  {!! $iframe !!}
 ```
 #### Example Routes
 Relevant routes example, to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware<br/>
