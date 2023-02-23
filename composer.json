@@ -1,5 +1,5 @@
 {
-  "name": "knox/pesapal",
+  "name": "mudassar1/pesapal",
   "description": "A laravel package that integrates into the pesapal api",
   "keywords": [
     "pesapal",
@@ -26,8 +26,8 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7",
-    "illuminate/support": "^5.5|^6.0|^7.0|^8.0|^9.0"
+    "php": ">=7|^8.0|^8.1|^8.2",
+    "illuminate/support": "^5.5|^6.0|^7.0|^8.0|^9.0|^10.0"
   },
   "autoload": {
     "psr-4": {
