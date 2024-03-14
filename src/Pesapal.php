@@ -270,8 +270,8 @@ class Pesapal implements PesapalContract
      */
     public function api_link($path = null)
     {
-        $live = 'https://www.pesapal.com/api/';
-        $demo = 'https://demo.pesapal.com/api/';
+        $live = 'https://cybqa.pesapal.com/pesapalv3/api/';
+        $demo = 'https://pay.pesapal.com/v3/api/';
         return (config('pesapal.live') ? $live : $demo) . $path;
     }
 
