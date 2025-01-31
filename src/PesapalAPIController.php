@@ -4,15 +4,16 @@ namespace Knox\Pesapal;
 
 use Knox\Pesapal\Exceptions\PesapalException;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Pesapal;
 
 class PesapalAPIController extends Controller
 {
 
-    function handleCallback()
+    function handleCallback(Request $request)
     {
-        $merchant_reference = request('pesapal_merchant_reference');
-        $tracking_id = request('pesapal_transaction_tracking_id');
+        $merchant_reference = $request->input('OrderMerchantReference');
+        $tracking_id = $request->input('OrderTrackingId');
         $route = config('pesapal.callback_route');
         return redirect()->route(
             $route,
@@ -20,12 +21,12 @@ class PesapalAPIController extends Controller
         );
     }
 
-    function handleIPN()
+    function handleIPN(Request $request)
     {
-        if (request('pesapal_notification_type') && request('pesapal_merchant_reference') && request('pesapal_transaction_tracking_id')) {
-            $notification_type = request('pesapal_notification_type');
-            $merchant_reference = request('pesapal_merchant_reference');
-            $tracking_id = request('pesapal_transaction_tracking_id');
+        if ($request->input('OrderNotificationType') && $request->input('OrderMerchantReference') && $request->input('OrderTrackingId')) {
+            $notification_type = $request->input('OrderNotificationType');
+            $merchant_reference = $request->input('OrderMerchantReference');
+            $tracking_id = $request->input('OrderTrackingId');
             Pesapal::redirectToIPN($notification_type, $merchant_reference, $tracking_id);
         } else {
             throw new PesapalException("incorrect parameters in request");

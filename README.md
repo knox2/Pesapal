@@ -1,5 +1,6 @@
-# Pesapal Laravel 5,6 API
-Laravel 5,6 Package for the Pesapal API
+# Pesapal Laravel >7 API
+Laravel >7 Package for the Pesapal API (uses v3 pesapal API)
+######for < laravel v7 use v1 of the package
 
 ## Installation
 
@@ -43,12 +44,14 @@ PESAPAL\_CALLBACK_ROUTE `route name to handle the callback eg Route::get('donepa
 <b>NB: The controller method accepts 4 function parameters, Example:</b>
 
 ```php
-public function confirmation($trackingid,$status,$payment_method,$merchant_reference)
-{
-	$payments = Payments::where('tracking',$trackingid)->first();
-    $payments -> payment_status = $status;
-    $payments -> payment_method = $payment_method;
-    $payments -> save();
+public function confirmation($trackingid,$status,$payment_method,$merchant_reference){
+	$payments = Payments::where('reference',$merchant_reference)->first();
+    if($payments){
+        $payments -> tracking = $trackingid;
+        $payments -> payment_status = $status;
+        $payments -> payment_method = $payment_method;
+        $payments -> save();
+    }
 }       
 ```
 
@@ -82,17 +85,35 @@ class PaymentsController extends Controller
         $payments -> save();
 
         $details = array(
-            'amount' => $payments -> amount,
-            'description' => 'Test Transaction',
-            'type' => 'MERCHANT',
-            'first_name' => 'Fname',
-            'last_name' => 'Lname',
-            'email' => 'test@test.com',
-            'phonenumber' => '254-723232323',
-            'reference' => $payments -> transactionid,
-            'height'=>'400px',
-            //'currency' => 'USD'
-        );
+                    'amount' => $payments -> amount,
+                    'description' => 'Test Transaction',
+                    'type' => 'MERCHANT',
+                    'first_name' => 'Fname',
+                    'middle_name' => 'Mname',
+                    'last_name' => 'Lname',
+                    'email' => 'test@test.com',
+                    'phonenumber' => '254-723232323',
+                    'country_code' => 'KE',
+                    'line_1' => '',
+                    'line_2' => '',
+                    'city' => '',
+                    'state' => '',
+                    'postal_code' => '',
+                    'zip_code' => '',
+                    'reference' => $payments -> transactionid,
+                    'height'=>'400px',
+                    //'currency' => 'USD'
+                    //'cancellation_url' => '',
+                    //'notification_id' => '',
+                    //'branch' => '',
+                    //'account_number' => '',  
+                    //'subscription_details' => [
+                    //    'start_date' => '24-01-2023',
+                    //    'end_date' => '31-12-2023',
+                    //    'frequency' => 'DAILY'
+                    //]
+                );
+
         $iframe=Pesapal::makePayment($details);
 
         return view('payments.business.pesapal', compact('iframe'));
